@@ -1,0 +1,7 @@
+PyFlyff.spec
+__pycache__/
+build/
+dist/
+UserAgent.json
+MiniFToolConfig.json
+AltControl.json
