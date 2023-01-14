@@ -169,9 +169,9 @@ class MainWindow(QMainWindow):
             while True:
                 if globalVariables.start_mini_ftool_loop is True:
                     for i in range(1, mini_ftool_in_game_key_number + 1):
-                        mini_ftool_interval_string = "mini_ftool_interval_{}".format(i)
-                        if mini_ftool_loop_time % globals()[mini_ftool_interval_string] == 0:
-                            mini_ftool_queue.append([globalVariables.hwndMain, globals()[mini_ftool_interval_string]])
+                        if mini_ftool_loop_time % globals()["mini_ftool_interval_{}".format(i)] == 0:
+                            mini_ftool_queue.append([globalVariables.hwndMain, globals()["mini_ftool_in_game_key_{}".format(i)]])
+
                     if len(mini_ftool_queue) > 0:
                         element = mini_ftool_queue.pop()
                         windowsAPI.winapi(element[0], element[1])
