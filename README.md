@@ -1,4 +1,8 @@
+# Obsolete
+PyFlyff had a great run, with over 2k downloads, but it time to retire it for now. Try my new tool: [Mini PyFlyff](https://github.com/ils94/Mini_PyFlyff)
+
 # PyFlyff
+
 QtWebEngine to play Flyff Universe
 
 # Client Hotkeys
