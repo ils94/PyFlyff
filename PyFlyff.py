@@ -11,7 +11,7 @@ from tkinter import Tk, ttk, Frame, Label, Entry, Button, X, W, LEFT, RIGHT, END
 from tkinter import messagebox
 
 import random
-
+import threading
 import globalVariables
 import virtualKeys
 import profiles
@@ -126,6 +126,8 @@ class MainWindow(QMainWindow):
         self.windows = []
 
         self.create_open_client_profile("Main")
+        threading.Thread(target=self.mini_ftool_loop, daemon=True, name="mini_ftool_loop").start()
+        
 
     def create_new_window(self, link, wn):
         new_window = QWebEngineView()
@@ -151,83 +153,48 @@ class MainWindow(QMainWindow):
         self.windows.append(new_window)
 
     def mini_ftool_loop(self):
-
-        counter = 0
-
-        extra_key_time_1 = 0.0
-        extra_key_time_2 = 0.0
-        extra_key_time_3 = 0.0
-        extra_key_time_4 = 0.0
-
         try:
             while True:
+                while globalVariables.start_mini_ftool_loop is False:
+                    next
 
-                if counter < globalVariables.mini_ftool_repeat_times and globalVariables.start_mini_ftool_loop is True:
+                mini_ftool_loop_time = 0
+                max_mini_ftool_interval = 0
+                mini_ftool_queue = []
 
-                    windowsAPI.winapi(globalVariables.hwndMain, globals()["mini_ftool_in_game_key_1"])
+                for k,v in globals().items():
+                    if k.startswith('mini_ftool_in_game_key'):
+                        mini_ftool_in_game_key_number = int(k.split('_')[-1])
 
-                    random_wait = random.uniform(globalVariables.mini_ftool_min_interval,
-                                                 globals()["mini_ftool_interval_1"])
+                for i in range(1, mini_ftool_in_game_key_number + 1):
+                    mini_ftool_interval = globals()["mini_ftool_interval_{}".format(i)]
+                    if mini_ftool_interval > max_mini_ftool_interval:
+                        max_mini_ftool_interval = mini_ftool_interval
 
-                    if ("mini_ftool_in_game_key_2" and "mini_ftool_interval_2") in globals():
-                        if extra_key_time_1 >= globals()["mini_ftool_interval_2"]:
-                            windowsAPI.winapi(globalVariables.hwndMain, globals()["mini_ftool_in_game_key_2"])
-                            extra_key_time_1 = 0.0
+                while globalVariables.start_mini_ftool_loop:
+                    for i in range(1, mini_ftool_in_game_key_number + 1):
+                        if mini_ftool_loop_time % globals()["mini_ftool_interval_{}".format(i)] == 0:
+                            mini_ftool_queue.append(globals()["mini_ftool_in_game_key_{}".format(i)])
 
-                    if ("mini_ftool_in_game_key_3" and "mini_ftool_interval_3") in globals():
-                        if extra_key_time_2 >= globals()["mini_ftool_interval_3"]:
-                            windowsAPI.winapi(globalVariables.hwndMain, globals()["mini_ftool_in_game_key_3"])
-                            extra_key_time_2 = 0.0
-                            if globalVariables.fix_mini_ftool_loop_var == "YES":
-                                extra_key_time_1 = 0.0
+                    if len(mini_ftool_queue) > 0:
+                        windowsAPI.winapi(globalVariables.hwndMain, mini_ftool_queue.pop(0))
 
-                    if ("mini_ftool_in_game_key_4" and "mini_ftool_interval_4") in globals():
-                        if extra_key_time_3 >= globals()["mini_ftool_interval_4"]:
-                            windowsAPI.winapi(globalVariables.hwndMain, globals()["mini_ftool_in_game_key_4"])
-                            extra_key_time_3 = 0.0
-                            if globalVariables.fix_mini_ftool_loop_var == "YES":
-                                extra_key_time_1 = 0.0
-                                extra_key_time_2 = 0.0
-
-                    if ("mini_ftool_in_game_key_5" and "mini_ftool_interval_5") in globals():
-                        if extra_key_time_4 >= globals()["mini_ftool_interval_5"]:
-                            windowsAPI.winapi(globalVariables.hwndMain, globals()["mini_ftool_in_game_key_5"])
-                            extra_key_time_4 = 0.0
-                            if globalVariables.fix_mini_ftool_loop_var == "YES":
-                                extra_key_time_1 = 0.0
-                                extra_key_time_2 = 0.0
-                                extra_key_time_3 = 0.0
-
-                    counter += 1
-
-                    time.sleep(random_wait)
-
-                    extra_key_time_1 += random_wait
-                    extra_key_time_2 += random_wait
-                    extra_key_time_3 += random_wait
-                    extra_key_time_4 += random_wait
-                else:
-                    globalVariables.start_mini_ftool_loop = False
-                    self.mini_ftool_status.setTitle("Mini Ftool: OFF")
-                    break
-
+                    mini_ftool_loop_time += 1
+                    time.sleep(1 + random.uniform(0, 1))
+                    if mini_ftool_loop_time > max_mini_ftool_interval:
+                        mini_ftool_loop_time = 1
         except Exception as e:
             messagebox.showerror("Error", str(e))
 
     def start_mini_ftool(self):
-
         globalVariables.hwndMain = win32gui.FindWindow(None, "PyFlyff - " + globalVariables.mini_ftool_window_name)
-
-        self.mini_ftool_status.setTitle("Mini Ftool: ON")
-
-        if not globalVariables.start_mini_ftool_loop:
-            if globalVariables.mini_ftool_activation_key != "" and globals()["mini_ftool_in_game_key_1"] != "":
-                globalVariables.start_mini_ftool_loop = True
-                miscs.multithreading(self.mini_ftool_loop)
-        else:
+        if globalVariables.start_mini_ftool_loop:
             globalVariables.start_mini_ftool_loop = False
-
             self.mini_ftool_status.setTitle("Mini Ftool: OFF")
+        else:
+            if globalVariables.mini_ftool_activation_key != "" and globals()["mini_ftool_in_game_key_1"] != "":
+                self.mini_ftool_status.setTitle("Mini Ftool: ON")
+                globalVariables.start_mini_ftool_loop = True
 
     def mini_ftool_config(self):
 
@@ -620,7 +587,6 @@ class MainWindow(QMainWindow):
         globalVariables.alt_control_key_list_2.clear()
 
     def create_shortcuts(self):
-
         self.ftool_key = QShortcut(self)
         self.ftool_key.activated.connect(self.start_mini_ftool)
 
