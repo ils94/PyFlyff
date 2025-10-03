@@ -1,118 +1,149 @@
-# Obsolete
-PyFlyff had a great run, with over 2k downloads, but it time to retire it for now. Try my new tool: [Mini PyFlyff](https://github.com/ils94/Mini_PyFlyff)
+# 🪄 PyFlyff (Deprecated)
 
-# PyFlyff
+> **Project Retired:**  
+> PyFlyff had a great run with over **2,000 downloads**, but it’s now retired.  
+> Check out its modern successor: [**Mini PyFlyff**](https://github.com/ils94/Mini_PyFlyff).
 
-QtWebEngine to play Flyff Universe
+## Overview
 
-# Client Hotkeys
+**PyFlyff** is a **QtWebEngine-based** desktop client for playing [Flyff Universe](https://universe.flyff.com/play), with additional features like simple automation (Mini Ftool) and multi-client controls.
 
-Ctrl+Shift+F5 = reload client back to https://universe.flyff.com/play
+## Client Hotkeys
 
-Ctrl+Shift+F11 = enter/exit main window fullscreen
+-   **Ctrl + Shift + F5** → Reloads the client back to `https://universe.flyff.com/play`.
+    
+-   **Ctrl + Shift + F11** → Toggle fullscreen mode for the main window.
+    
+-   **Ctrl + Shift + PgUp** → Open a new client window.
+    
+-   To stop the **Mini Ftool loop**, press the configured **Activation Key** again.
 
-Ctrl+Shift+PgUp (PageUp) open a new client window
+## Features
 
-To stop the Mini Ftool loop, press the Activation Key again.
+### Mini Ftool
 
-# Features
+Lets you automate up to **5 hotkeys** to repeatedly use skills/items (ideal for heal spamming or mage/psy/elementor 1x1 grinding).
 
-Mini Ftool: You can setup up to 5 hotkeys to automatically use a skill/item for you (good for heal spam or mage/psy/elementor 1x1). To stop it, press the same key you used to start the loop.
+-   Press the **Activation Key** again to stop the loop.
+    
+-   Separate in-game keys with commas `,`.
+    
 
-Separate each key with a comma ","
+Example configuration:
 
-Example: 
-
+```
 Activation Key: f1
-
 In-Game Hotkey(s): 1,2,3,4,5
-
 Repeat: 10
-
 Interval(s): 1,5,10,15,20
-
 Min Interval: 0
-
 Fix Loop: YES
-
 Profile Name: RM
+```
 
-"Activation Key", is the key you will press to start the mini ftool loop. Pressing it again will stop it.
+ **How it works:**
 
-"In-Game Hotkey(s)" are the Alt Client keys that will be pressed in a sequencial order.
+-   **Activation Key:** the key you press to start/stop the loop.
+    
+-   **In-Game Hotkey(s):** keys pressed in the Alt Client in sequential order.
+    
+-   **Repeat:** number of times the loop runs (higher values simulate “endless” loops).
+    
+-   **Interval(s):** delay in seconds for each key.
+    
+    -   e.g. with `1,5,10,15,20`, key `1` is pressed every 1 second, `2` every 5 seconds, and so on.
+        
+-   **Fix Loop:** prevents overlapping actions when intervals align, ensuring a clean 1→2→3→4→5 rotation.
+    
+-   **Profile Name:** name of the client window so Win32 API can target it.
 
-"Repeat" is the number of times the loop will repeat itself, and then stop. If you make it 10, it will repeat 10 times. Longer repeat times will make the loop seems "endless", like setting Repeat: 9999999999.
+### Alt Control
 
-"Interval" is the amount in seconds for each key, follow along:
-
-1,2,3,4,5
-
-1,5,10,15,20
-
-This means that "1" will be pressed every 1 second.
-
-"2" will be pressed every 5 seconds.
-
-"3" every 10 seconds, "4" every 15 seconds and "5" every 20 seconds.
-
-"Fix Loop", will fix the loop, because mathematically, all keys will be pressed at the same time, due their Intervals reaching the same threshold. So pick "YES" if you wish to always make the Mini Ftool press 1 and 2 and 3 and 4 and 5 and repeat from 1 to 5 without pressing "1 and 2" at the same time.
-
-"Profile Name" is basically the name of your Client Window, so the Win32api can look for it and send API messages to it.
-
-Alt Control: You can set hotkeys for the Main Client to send a direct command to the Alt Client. Good if you don't want to use the Mini Ftool, but still want to command your FS/RM without having to alt+tab. To set multiple keys (up to 104 keys!) add commas between each one.
+Lets you map keys from the **Main Client** to send commands to an **Alt Client**, avoiding frequent Alt-Tab switching.
 
 Example:
 
-Main Client Hotkey: 1,2,3,4,5,6,7,8,9...
+```
+Main Client Hotkey: 1,2,3,4,5,6,7,8,9
+Alt Client Hotkey: f1,f2,f3,f4,f5,f6,f7,f8,f9
+```
 
-Alt Client Hotkey: f1,f2,f3,f4,f5,f6,f7,f8,f9...
+Pressing `1` in the Main Client sends `f1` to the Alt Client, and so on.
 
-This means that when you hit "1" in the Main Client, you will instead hit "f1" in the Alt Client, and so on.
+### Reset Hotkeys
 
-Reset Hotkeys: Clear the variables values from Mini Ftool and Alt Control keys as well as the variable containing the value that is used to identify which window is the Main Client and which window is the Alt Client. Good in case you want to switch keys on both Mini Ftool and Alt Control without the need of completly restarting the PyFlyff Client.
+Clears all Mini Ftool and Alt Control settings as well as the stored Main/Alt Client window identifiers — useful if you want to reconfigure without restarting the PyFlyff client.
 
-User Agent: You can use this to spoof from where you are playing Flyff Universe, or, you can use it in case you are having trouble with your Google Account login / recaptcha challenge (see the "Known Issues so far" section of this README)
+### User Agent
 
-Community: You can access community links within the client, like Flyffipedia, Madrigal Inside, Flyffulator, Madrigal Maps, Flyff Model Viewer, Skillulator
+Lets you spoof your playing environment or fix login/recaptcha issues:
 
-# Disclaimer
+-   If Google marks the client as unsafe, set **User Agent → None**, save, and restart.
+    
+-   If recaptcha complains about an outdated browser, set **User Agent → any value** to bypass it.
 
-As you can see, I added bot like features to my Client. They are simple, yet, very convenient tools to make the grind a bit more bearable, but keep in mind that using automation is against the rules and you might get banned for it. The Mini Ftool generate a random wait time for every repeatable action, but this does not prevent from a GM to identify that you are in fact botting, so try to not abuse it, you have been very much warned.
+### Community Links
 
-# Known Issues so far
+Access helpful Flyff Universe resources directly within the client:
 
-If when you try to login wih your Google Account, and Google mark my Client as unsafe, set your User Agent by pressing the button "Set User Agent" in the toolbar and type in the input box: None
+-   Flyffipedia
+    
+-   Madrigal Inside
+    
+-   Flyffulator
+    
+-   Madrigal Maps
+    
+-   Flyff Model Viewer
+    
+-   Skillulator
 
-Hit save and restart the Client, it should let you login with no problem now.
 
-Sometimes you won't be able to resolve the recaptcha challenge since it will report that PyFlyff is an outdated browser, to fix it, set your User Agent to anything really and it will bypass this check.
+## Disclaimer
 
-# How to compile it yourself
+PyFlyff includes light automation tools that can ease grinding.  
+However, **using automation is against the game’s Terms of Service** and may result in a ban.
 
-You i'll need to pip install those modules to your Python installation:
+The Mini Ftool adds slight randomness to actions, but it does **not** guarantee safety against detection.  
+Use responsibly — you’ve been warned.
 
+## Known Issues
+
+-   If Google login is blocked, set **User Agent → None** and restart.
+    
+-   If recaptcha fails due to an “outdated browser” warning, set **User Agent → any value** to bypass.
+
+## Build Instructions
+
+Install dependencies:
+
+```bash
 pip install pyinstaller pywin32 PyQt5 PyQtWebEngine
+```
 
-Then create a .BAT file with this:
+Create a `.BAT` file:
 
-IF your Python installation is ACCESSIBLE from Windows Env variables:
+If Python is available in your PATH:
 
+```bash
 pyinstaller PyFlyff.py --icon=icons/PyFlyff.ico --onedir --noconsole
 xcopy icons dist\PyFlyff\icons\
+```
 
-IF your Python installation is NOT accessible from Windows Env variables, then you will have to fully tell both python.exe and pyinstaller script locations in the command line:
+If Python is not in PATH, use full paths:
+```bash
+Path\to\python.exe Path\to\pyinstaller.py PyFlyff.py --icon=icons/PyFlyff.ico --onedir --noconsole
 
-Path/to/your/python.exe path/to/your/pyinstaller.py PyFlyff.py --icon=icons/PyFlyff.ico --onedir --noconsole
 xcopy icons dist\PyFlyff\icons\
+```
 
-pyinstaller.py script is located in your Python installation folder - Scripts
+-   `pyinstaller.py` is located in `<Python Installation>\Scripts`.
+    
+-   Place the `.BAT` file in the project folder and run it.
+    
+-   After building, ensure the `icons` folder is inside `dist\PyFlyff` to prevent startup errors.
 
-Save both .BAT and put it inside the project folder and run it, wait for the compilation to finish and the resulted folder named "PyFlyff" will appear inside the dist folder created by pyinstaller inside the project folder.
+## Android Client
 
-After the compilation is finished, make sure the folder "icons" is inside the generated PyFlyff folder inside the dist folder, else it will give an error when opening the client.
-
-# Android Client
-
-I also made an Android Client that makes it easier for your to Dual Client using your Android Device.
-
-Here is the link: https://github.com/ils94/FlyffUAndroid
+For easier dual-clienting on mobile, try the Android version:  
+[**FlyffUAndroid**](https://github.com/ils94/FlyffUAndroid)
