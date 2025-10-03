@@ -1,8 +1,8 @@
 from tkinter import Tk, messagebox, Label, Entry, Button, X
 
-from PyQt5.QtWidgets import QErrorMessage
-from PyQt5.QtGui import QIcon
-from PyQt5.QtCore import Qt
+from PyQt6.QtWidgets import QErrorMessage
+from PyQt6.QtGui import QIcon
+from PyQt6.QtCore import Qt
 import json
 import globalVariables
 import saveConfigJSON

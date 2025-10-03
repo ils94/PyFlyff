@@ -2,10 +2,11 @@ import json
 import sys
 import time
 
-from PyQt5.QtCore import QUrl, Qt
-from PyQt5.QtWidgets import QApplication, QMainWindow, QShortcut, QAction, QMenuBar
-from PyQt5.QtWebEngineWidgets import QWebEngineView, QWebEngineProfile, QWebEnginePage
-from PyQt5.QtGui import QKeySequence, QIcon
+from PyQt6.QtCore import QUrl, Qt
+from PyQt6.QtWidgets import QApplication, QMainWindow, QMenuBar
+from PyQt6.QtWebEngineWidgets import QWebEngineView
+from PyQt6.QtWebEngineCore import QWebEngineProfile, QWebEnginePage, QWebEngineSettings
+from PyQt6.QtGui import QKeySequence, QIcon, QShortcut, QAction
 
 from tkinter import Tk, ttk, Frame, Label, Entry, Button, X, W, LEFT, RIGHT, END, OptionMenu, StringVar
 from tkinter import messagebox
@@ -727,4 +728,4 @@ QApplication.setApplicationName("PyFlyff")
 
 window = MainWindow()
 
-app.exec_()
+app.exec()
