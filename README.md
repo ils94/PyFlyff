@@ -1,4 +1,4 @@
-# 🪄 PyFlyff (Deprecated)
+## PyFlyff (Deprecated)
 
 > **Project Retired:**  
 > PyFlyff had a great run with over **2,000 downloads**, but it’s now retired.  
