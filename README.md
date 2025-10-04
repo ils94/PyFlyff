@@ -118,7 +118,7 @@ Use responsibly — you’ve been warned.
 Install dependencies:
 
 ```bash
-pip install pyinstaller pywin32 PyQt5 PyQtWebEngine
+pip install pyinstaller pywin32 PyQt6 PyQt6-WebEngine
 ```
 
 Create a `.BAT` file:
