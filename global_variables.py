@@ -3,7 +3,7 @@ import pathlib
 url = "https://universe.flyff.com/play"
 icon = "icons/PyFlyff.ico"
 
-default_user_agent = "None"
+default_user_agent = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36"
 
 mini_ftool_activation_key = ""
 mini_ftool_min_interval = 0

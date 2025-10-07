@@ -5,7 +5,7 @@ import time
 from PyQt6.QtCore import QUrl, Qt
 from PyQt6.QtWidgets import QApplication, QMainWindow, QMenuBar
 from PyQt6.QtWebEngineWidgets import QWebEngineView
-from PyQt6.QtWebEngineCore import QWebEngineProfile, QWebEnginePage, QWebEngineSettings
+from PyQt6.QtWebEngineCore import QWebEngineProfile, QWebEnginePage
 from PyQt6.QtGui import QKeySequence, QIcon, QShortcut, QAction
 
 from tkinter import Tk, ttk, Frame, Label, Entry, Button, X, W, LEFT, RIGHT, END, OptionMenu, StringVar
@@ -13,11 +13,11 @@ from tkinter import messagebox
 
 import random
 
-import globalVariables
-import virtualKeys
+import global_variables
+import virtual_keys
 import profiles
-import windowsAPI
-import saveConfigJSON
+import windows_api
+import save_config_json
 import miscs
 
 import win32gui
@@ -29,7 +29,7 @@ class MainWindow(QMainWindow):
         super(MainWindow, self).__init__()
 
         self.browser = None
-        self.setWindowIcon(QIcon(globalVariables.icon))
+        self.setWindowIcon(QIcon(global_variables.icon))
         self.setMinimumSize(640, 480)
         self.showMaximized()
 
@@ -130,7 +130,7 @@ class MainWindow(QMainWindow):
 
     def create_new_window(self, link, wn):
         new_window = QWebEngineView()
-        new_window.setAttribute(Qt.WA_DeleteOnClose)
+        new_window.setAttribute(Qt.WidgetAttribute.WA_DeleteOnClose)
         new_window.destroyed.connect(lambda: self.windows.remove(new_window))
 
         client_folder = "C:/PyFlyff/" + wn.replace(" ", "")
@@ -143,7 +143,7 @@ class MainWindow(QMainWindow):
         new_window.setPage(alt_page)
         new_window.load(QUrl(link))
         new_window.setWindowTitle("PyFlyff - " + wn)
-        new_window.setWindowIcon(QIcon(globalVariables.icon))
+        new_window.setWindowIcon(QIcon(global_variables.icon))
         new_window.setMinimumSize(640, 480)
         new_window.showMaximized()
 
@@ -163,38 +163,38 @@ class MainWindow(QMainWindow):
         try:
             while True:
 
-                if counter < globalVariables.mini_ftool_repeat_times and globalVariables.start_mini_ftool_loop is True:
+                if counter < global_variables.mini_ftool_repeat_times and global_variables.start_mini_ftool_loop is True:
 
-                    windowsAPI.winapi(globalVariables.hwndMain, globals()["mini_ftool_in_game_key_1"])
+                    windows_api.winapi(global_variables.hwndMain, globals()["mini_ftool_in_game_key_1"])
 
-                    random_wait = random.uniform(globalVariables.mini_ftool_min_interval,
+                    random_wait = random.uniform(global_variables.mini_ftool_min_interval,
                                                  globals()["mini_ftool_interval_1"])
 
                     if ("mini_ftool_in_game_key_2" and "mini_ftool_interval_2") in globals():
                         if extra_key_time_1 >= globals()["mini_ftool_interval_2"]:
-                            windowsAPI.winapi(globalVariables.hwndMain, globals()["mini_ftool_in_game_key_2"])
+                            windows_api.winapi(global_variables.hwndMain, globals()["mini_ftool_in_game_key_2"])
                             extra_key_time_1 = 0.0
 
                     if ("mini_ftool_in_game_key_3" and "mini_ftool_interval_3") in globals():
                         if extra_key_time_2 >= globals()["mini_ftool_interval_3"]:
-                            windowsAPI.winapi(globalVariables.hwndMain, globals()["mini_ftool_in_game_key_3"])
+                            windows_api.winapi(global_variables.hwndMain, globals()["mini_ftool_in_game_key_3"])
                             extra_key_time_2 = 0.0
-                            if globalVariables.fix_mini_ftool_loop_var == "YES":
+                            if global_variables.fix_mini_ftool_loop_var == "YES":
                                 extra_key_time_1 = 0.0
 
                     if ("mini_ftool_in_game_key_4" and "mini_ftool_interval_4") in globals():
                         if extra_key_time_3 >= globals()["mini_ftool_interval_4"]:
-                            windowsAPI.winapi(globalVariables.hwndMain, globals()["mini_ftool_in_game_key_4"])
+                            windows_api.winapi(global_variables.hwndMain, globals()["mini_ftool_in_game_key_4"])
                             extra_key_time_3 = 0.0
-                            if globalVariables.fix_mini_ftool_loop_var == "YES":
+                            if global_variables.fix_mini_ftool_loop_var == "YES":
                                 extra_key_time_1 = 0.0
                                 extra_key_time_2 = 0.0
 
                     if ("mini_ftool_in_game_key_5" and "mini_ftool_interval_5") in globals():
                         if extra_key_time_4 >= globals()["mini_ftool_interval_5"]:
-                            windowsAPI.winapi(globalVariables.hwndMain, globals()["mini_ftool_in_game_key_5"])
+                            windows_api.winapi(global_variables.hwndMain, globals()["mini_ftool_in_game_key_5"])
                             extra_key_time_4 = 0.0
-                            if globalVariables.fix_mini_ftool_loop_var == "YES":
+                            if global_variables.fix_mini_ftool_loop_var == "YES":
                                 extra_key_time_1 = 0.0
                                 extra_key_time_2 = 0.0
                                 extra_key_time_3 = 0.0
@@ -208,7 +208,7 @@ class MainWindow(QMainWindow):
                     extra_key_time_3 += random_wait
                     extra_key_time_4 += random_wait
                 else:
-                    globalVariables.start_mini_ftool_loop = False
+                    global_variables.start_mini_ftool_loop = False
                     self.mini_ftool_status.setTitle("Mini Ftool: OFF")
                     break
 
@@ -217,24 +217,24 @@ class MainWindow(QMainWindow):
 
     def start_mini_ftool(self):
 
-        globalVariables.hwndMain = win32gui.FindWindow(None, "PyFlyff - " + globalVariables.mini_ftool_window_name)
+        global_variables.hwndMain = win32gui.FindWindow(None, "PyFlyff - " + global_variables.mini_ftool_window_name)
 
         self.mini_ftool_status.setTitle("Mini Ftool: ON")
 
-        if not globalVariables.start_mini_ftool_loop:
-            if globalVariables.mini_ftool_activation_key != "" and globals()["mini_ftool_in_game_key_1"] != "":
-                globalVariables.start_mini_ftool_loop = True
+        if not global_variables.start_mini_ftool_loop:
+            if global_variables.mini_ftool_activation_key != "" and globals()["mini_ftool_in_game_key_1"] != "":
+                global_variables.start_mini_ftool_loop = True
                 miscs.multithreading(self.mini_ftool_loop)
         else:
-            globalVariables.start_mini_ftool_loop = False
+            global_variables.start_mini_ftool_loop = False
 
             self.mini_ftool_status.setTitle("Mini Ftool: OFF")
 
     def mini_ftool_config(self):
 
-        if not globalVariables.menubar_window:
+        if not global_variables.menubar_window:
 
-            globalVariables.menubar_window = True
+            global_variables.menubar_window = True
 
             ftool_config_window = Tk()
 
@@ -251,15 +251,15 @@ class MainWindow(QMainWindow):
             ftool_config_window.minsize(300, 320)
             ftool_config_window.attributes("-topmost", True)
             ftool_config_window.title("Mini Ftool")
-            ftool_config_window.iconbitmap(globalVariables.icon)
+            ftool_config_window.iconbitmap(global_variables.icon)
 
             def save():
 
-                for variable in globalVariables.mini_ftool_global_vars:
+                for variable in global_variables.mini_ftool_global_vars:
                     if variable in globals():
                         del globals()[variable]
 
-                globalVariables.mini_ftool_global_vars.clear()
+                global_variables.mini_ftool_global_vars.clear()
 
                 aux = activation_key_entry.get()
 
@@ -298,7 +298,7 @@ class MainWindow(QMainWindow):
 
                         messagebox.showerror("Error", "Activation Key and In-game Hotkey must be different.")
 
-                    elif activation_key_entry.get() in globalVariables.alt_control_key_list_1:
+                    elif activation_key_entry.get() in global_variables.alt_control_key_list_1:
 
                         messagebox.showerror("Error", "Main Client HotKey from Alt Control "
                                                       "cannot be the same as the Mini Ftool Activation Key.")
@@ -315,35 +315,35 @@ class MainWindow(QMainWindow):
                         interval_counter = 1
 
                         for key in list_keys:
-                            globals()["mini_ftool_in_game_key_" + str(key_counter)] = virtualKeys.vk_code.get(key)
-                            globalVariables.mini_ftool_global_vars.append("mini_ftool_in_game_key_" + str(key_counter))
+                            globals()["mini_ftool_in_game_key_" + str(key_counter)] = virtual_keys.vk_code.get(key)
+                            global_variables.mini_ftool_global_vars.append("mini_ftool_in_game_key_" + str(key_counter))
                             key_counter += 1
                             if key_counter > len(list_keys):
                                 break
 
                         for interval in list_interval:
                             globals()["mini_ftool_interval_" + str(interval_counter)] = float(interval)
-                            globalVariables.mini_ftool_global_vars.append(
+                            global_variables.mini_ftool_global_vars.append(
                                 "mini_ftool_interval_" + str(interval_counter))
                             interval_counter += 1
                             if interval_counter > len(list_interval):
                                 break
 
-                        globalVariables.mini_ftool_activation_key = activation_key_entry.get()
-                        globalVariables.fix_mini_ftool_loop_var = var.get()
-                        globalVariables.mini_ftool_repeat_times = int(repeat_times_entry.get())
-                        globalVariables.mini_ftool_window_name = window_combobox.get()
-                        globalVariables.mini_ftool_min_interval = float(min_interval_entry.get())
+                        global_variables.mini_ftool_activation_key = activation_key_entry.get()
+                        global_variables.fix_mini_ftool_loop_var = var.get()
+                        global_variables.mini_ftool_repeat_times = int(repeat_times_entry.get())
+                        global_variables.mini_ftool_window_name = window_combobox.get()
+                        global_variables.mini_ftool_min_interval = float(min_interval_entry.get())
 
-                        self.ftool_key.setKey(globalVariables.mini_ftool_activation_key)
+                        self.ftool_key.setKey(global_variables.mini_ftool_activation_key)
 
-                        saveConfigJSON.save_config_json(file=globalVariables.mini_ftool_json_file, values=(
+                        save_config_json.save_config_json(file=global_variables.mini_ftool_json_file, values=(
                             activation_key_entry.get(), in_game_hotkey_entry.get(), repeat_times_entry.get(),
                             interval_entry.get(), min_interval_entry.get(), var.get(), window_combobox.get()))
 
                         window_combobox["values"] = profiles.save_alt_profiles(window_combobox.get())
 
-                        globalVariables.menubar_window = False
+                        global_variables.menubar_window = False
                         ftool_config_window.destroy()
 
                 except Exception as e:
@@ -381,7 +381,7 @@ class MainWindow(QMainWindow):
             fix_mini_ftool_op.config(width=5)
 
             window_label = Label(frame, text="Profile Name:", width=22, anchor=W)
-            window_combobox = ttk.Combobox(frame, values=globalVariables.profile_list, width=17)
+            window_combobox = ttk.Combobox(frame, values=global_variables.profile_list, width=17)
 
             activation_key_label.grid(row=0, column=0, pady=5)
             activation_key_entry.grid(row=0, column=1, pady=5)
@@ -408,8 +408,8 @@ class MainWindow(QMainWindow):
             button_save.pack(padx=5, pady=5)
 
             try:
-                if globalVariables.mini_ftool_json_file_location.exists():
-                    with open(globalVariables.mini_ftool_json_file_location) as js:
+                if global_variables.mini_ftool_json_file_location.exists():
+                    with open(global_variables.mini_ftool_json_file_location) as js:
                         data = json.load(js)
 
                         activation_key_entry.insert(0, data["activation_key"])
@@ -428,9 +428,9 @@ class MainWindow(QMainWindow):
 
     def alt_control_config(self):
 
-        if not globalVariables.menubar_window:
+        if not global_variables.menubar_window:
 
-            globalVariables.menubar_window = True
+            global_variables.menubar_window = True
 
             alt_control_config_window = Tk()
 
@@ -447,7 +447,7 @@ class MainWindow(QMainWindow):
             alt_control_config_window.minsize(300, 280)
             alt_control_config_window.attributes("-topmost", True)
             alt_control_config_window.title("Alt Control")
-            alt_control_config_window.iconbitmap(globalVariables.icon)
+            alt_control_config_window.iconbitmap(global_variables.icon)
 
             def start():
 
@@ -463,8 +463,8 @@ class MainWindow(QMainWindow):
                 alt_client_hotkey_entry.delete(0, END)
                 alt_client_hotkey_entry.insert(0, aux.replace(" ", "").lower())
 
-                globalVariables.alt_control_key_list_1 = main_client_hotkey_entry.get().split(",")
-                globalVariables.alt_control_key_list_2 = alt_client_hotkey_entry.get().split(",")
+                global_variables.alt_control_key_list_1 = main_client_hotkey_entry.get().split(",")
+                global_variables.alt_control_key_list_2 = alt_client_hotkey_entry.get().split(",")
 
                 try:
                     if (
@@ -472,17 +472,17 @@ class MainWindow(QMainWindow):
 
                         messagebox.showerror("Error", "Fields cannot be empty.")
 
-                    elif any(e in globalVariables.alt_control_key_list_1 for e in
-                             globalVariables.alt_control_key_list_2):
+                    elif any(e in global_variables.alt_control_key_list_1 for e in
+                             global_variables.alt_control_key_list_2):
 
                         messagebox.showerror("Error",
                                              "Main Client Hotkey(s) and Alt Client Hotkey(s) must be different.")
 
-                    elif len(globalVariables.alt_control_key_list_1) != len(globalVariables.alt_control_key_list_2):
+                    elif len(global_variables.alt_control_key_list_1) != len(global_variables.alt_control_key_list_2):
                         messagebox.showerror("Error",
                                              "Number of keys must be equal to both Main Client and Alt Client.")
 
-                    elif globalVariables.mini_ftool_activation_key in globalVariables.alt_control_key_list_1:
+                    elif global_variables.mini_ftool_activation_key in global_variables.alt_control_key_list_1:
 
                         messagebox.showerror("Error", "Main Client HotKey from Alt Control cannot "
                                                       "be the same as the Mini Ftool Activation Key.")
@@ -491,7 +491,7 @@ class MainWindow(QMainWindow):
 
                         key1_counter = 1
 
-                        for key1 in globalVariables.alt_control_key_list_1:
+                        for key1 in global_variables.alt_control_key_list_1:
                             globals()["acak" + str(key1_counter)] = key1
                             exec('self.alt_control_key_' + str(key1_counter) + '.setKey("' + key1 + '")', None,
                                  locals())
@@ -499,22 +499,22 @@ class MainWindow(QMainWindow):
 
                         key2_counter = 1
 
-                        for key2 in globalVariables.alt_control_key_list_2:
-                            globals()["acig" + str(key2_counter)] = virtualKeys.vk_code.get(key2)
+                        for key2 in global_variables.alt_control_key_list_2:
+                            globals()["acig" + str(key2_counter)] = virtual_keys.vk_code.get(key2)
                             key2_counter += 1
 
-                        globalVariables.alt_window_name = alt_window_combobox.get()
+                        global_variables.alt_window_name = alt_window_combobox.get()
 
-                        saveConfigJSON.save_config_json(file=globalVariables.alt_control_json_file,
-                                                        values=(
-                                                            main_client_hotkey_entry.get(),
-                                                            alt_client_hotkey_entry.get(),
-                                                            alt_window_combobox.get()))
+                        save_config_json.save_config_json(file=global_variables.alt_control_json_file,
+                                                          values=(
+                                                              main_client_hotkey_entry.get(),
+                                                              alt_client_hotkey_entry.get(),
+                                                              alt_window_combobox.get()))
 
                         alt_window_combobox["values"] = profiles.save_alt_profiles(alt_window_combobox.get())
 
-                        globalVariables.alt_control_boolean = True
-                        globalVariables.menubar_window = False
+                        global_variables.alt_control_boolean = True
+                        global_variables.menubar_window = False
 
                         alt_control_config_window.destroy()
 
@@ -525,7 +525,7 @@ class MainWindow(QMainWindow):
 
                 self.clear_alt_control_shortcut_keys()
 
-                globalVariables.alt_control_boolean = False
+                global_variables.alt_control_boolean = False
 
             profiles.load_alt_profiles()
 
@@ -550,7 +550,7 @@ class MainWindow(QMainWindow):
             alt_client_hotkey_entry = Entry(frame, width=22)
 
             alt_window_label = Label(frame, text="Profile Name:", width=20, anchor=W)
-            alt_window_combobox = ttk.Combobox(frame, values=globalVariables.profile_list, width=19)
+            alt_window_combobox = ttk.Combobox(frame, values=global_variables.profile_list, width=19)
 
             main_client_hotkey_label.grid(row=0, column=0, pady=5)
             main_client_hotkey_entry.grid(row=0, column=1, pady=5)
@@ -568,8 +568,8 @@ class MainWindow(QMainWindow):
             button_stop.pack(side=RIGHT, padx=25)
 
             try:
-                if globalVariables.alt_control_json_file_location.exists():
-                    with open(globalVariables.alt_control_json_file_location) as js:
+                if global_variables.alt_control_json_file_location.exists():
+                    with open(global_variables.alt_control_json_file_location) as js:
                         data = json.load(js)
 
                         main_client_hotkey_entry.insert(0, data["activation_key"])
@@ -584,22 +584,22 @@ class MainWindow(QMainWindow):
 
     def send_alt_control_command(self, igk):
 
-        if globalVariables.alt_control_boolean and igk != "":
-            globalVariables.hwndAlt = win32gui.FindWindow(None, "PyFlyff - " + globalVariables.alt_window_name)
+        if global_variables.alt_control_boolean and igk != "":
+            global_variables.hwndAlt = win32gui.FindWindow(None, "PyFlyff - " + global_variables.alt_window_name)
 
-            windowsAPI.winapi(globalVariables.hwndAlt, igk)
+            windows_api.winapi(global_variables.hwndAlt, igk)
 
     def reset_hotkeys(self):
 
-        if not globalVariables.start_mini_ftool_loop:
-            globalVariables.mini_ftool_window_name = ""
-            globalVariables.hwndMain = ""
-            globalVariables.hwndAlt = ""
+        if not global_variables.start_mini_ftool_loop:
+            global_variables.mini_ftool_window_name = ""
+            global_variables.hwndMain = ""
+            global_variables.hwndAlt = ""
 
-            globalVariables.mini_ftool_activation_key = ""
-            globalVariables.fix_mini_ftool_loop_var = ""
+            global_variables.mini_ftool_activation_key = ""
+            global_variables.fix_mini_ftool_loop_var = ""
 
-            for variable in globalVariables.mini_ftool_global_vars:
+            for variable in global_variables.mini_ftool_global_vars:
                 if variable in globals():
                     del globals()[variable]
 
@@ -609,16 +609,16 @@ class MainWindow(QMainWindow):
 
     def clear_alt_control_shortcut_keys(self):
 
-        globalVariables.alt_window_name = ""
+        global_variables.alt_window_name = ""
 
         key_counter = 1
 
-        for key in globalVariables.alt_control_key_list_1:
+        for key in global_variables.alt_control_key_list_1:
             exec('self.alt_control_key_' + str(key_counter) + '.setKey("")', None, locals())
             key_counter += 1
 
-        globalVariables.alt_control_key_list_1.clear()
-        globalVariables.alt_control_key_list_2.clear()
+        global_variables.alt_control_key_list_1.clear()
+        global_variables.alt_control_key_list_2.clear()
 
     def create_shortcuts(self):
 
@@ -631,15 +631,15 @@ class MainWindow(QMainWindow):
             exec('self.alt_control_key_' + str(key_counter) + ' = QShortcut(self)', globals(), locals())
             exec('self.alt_control_key_' + str(key_counter) +
                  ".activated.connect(lambda: miscs.multithreading("
-                 "lambda: windowsAPI.send_alt_control_command(globals()['acig" +
+                 "lambda: windows_api.send_alt_control_command(globals()['acig" +
                  str(key_counter) + "'])))", globals(), locals())
             key_counter += 1
 
     def create_open_client_profile(self, client_type):
 
-        if not globalVariables.menubar_window:
+        if not global_variables.menubar_window:
 
-            globalVariables.menubar_window = True
+            global_variables.menubar_window = True
 
             profile_window = Tk()
 
@@ -656,7 +656,7 @@ class MainWindow(QMainWindow):
             profile_window.minsize(300, 100)
             profile_window.attributes("-topmost", True)
             profile_window.title("Profile")
-            profile_window.iconbitmap(globalVariables.icon)
+            profile_window.iconbitmap(global_variables.icon)
 
             def open_profile_new_window():
 
@@ -671,7 +671,7 @@ class MainWindow(QMainWindow):
 
                         if client_type == "Alt":
 
-                            self.create_new_window(globalVariables.url, profile_window_combobox.get())
+                            self.create_new_window(global_variables.url, profile_window_combobox.get())
                         else:
 
                             self.browser = None
@@ -689,14 +689,14 @@ class MainWindow(QMainWindow):
                             main_page = QWebEnginePage(main_profile, self.browser)
 
                             self.browser.setPage(main_page)
-                            self.browser.setUrl(QUrl(globalVariables.url))
+                            self.browser.setUrl(QUrl(global_variables.url))
                             self.setWindowTitle("PyFlyff - " + profile_window_combobox.get())
 
                             self.browser.page().profile().setHttpUserAgent(miscs.load_user_agent(self.windows))
 
-                            globalVariables.can_reload_client = True
+                            global_variables.can_reload_client = True
 
-                        globalVariables.menubar_window = False
+                        global_variables.menubar_window = False
                         profile_window.destroy()
 
                 except Exception as e:
@@ -705,7 +705,7 @@ class MainWindow(QMainWindow):
             profiles.load_alt_profiles()
 
             profile_window_label = Label(profile_window, text="Create a new profile or choose an existing one.")
-            profile_window_combobox = ttk.Combobox(profile_window, values=globalVariables.profile_list)
+            profile_window_combobox = ttk.Combobox(profile_window, values=global_variables.profile_list)
 
             profile_window_label.pack(fill=X, pady=5, padx=5)
             profile_window_combobox.pack(fill=X, pady=5, padx=5)
@@ -718,8 +718,8 @@ class MainWindow(QMainWindow):
             profile_window.mainloop()
 
     def reload_main_client(self):
-        if globalVariables.can_reload_client:
-            self.browser.setUrl(QUrl(globalVariables.url))
+        if global_variables.can_reload_client:
+            self.browser.setUrl(QUrl(global_variables.url))
 
 
 app = QApplication(sys.argv)

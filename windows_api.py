@@ -2,7 +2,7 @@ import win32api
 import win32con
 import time
 import random
-import globalVariables
+import global_variables
 import win32gui
 
 
@@ -13,7 +13,7 @@ def winapi(w, key):
 
 
 def send_alt_control_command(igk):
-    if globalVariables.alt_control_boolean and igk != "":
-        globalVariables.hwndAlt = win32gui.FindWindow(None, "PyFlyff - " + globalVariables.alt_window_name)
+    if global_variables.alt_control_boolean and igk != "":
+        global_variables.hwndAlt = win32gui.FindWindow(None, "PyFlyff - " + global_variables.alt_window_name)
 
-        winapi(globalVariables.hwndAlt, igk)
+        winapi(global_variables.hwndAlt, igk)

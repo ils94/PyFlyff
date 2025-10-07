@@ -4,13 +4,13 @@ from PyQt6.QtWidgets import QErrorMessage
 from PyQt6.QtGui import QIcon
 from PyQt6.QtCore import Qt
 import json
-import globalVariables
-import saveConfigJSON
+import global_variables
+import save_config_json
 import threading
 
 
 def destroy_toolbar_windows(w):
-    globalVariables.menubar_window = False
+    global_variables.menubar_window = False
     w.destroy()
 
 
@@ -28,9 +28,9 @@ def fullscreen(w):
 
 
 def set_user_agent():
-    if not globalVariables.menubar_window:
+    if not global_variables.menubar_window:
 
-        globalVariables.menubar_window = True
+        global_variables.menubar_window = True
 
         user_agent_config_window = Tk()
 
@@ -47,7 +47,7 @@ def set_user_agent():
         user_agent_config_window.minsize(300, 130)
         user_agent_config_window.attributes("-topmost", True)
         user_agent_config_window.title("User Agent")
-        user_agent_config_window.iconbitmap(globalVariables.icon)
+        user_agent_config_window.iconbitmap(global_variables.icon)
 
         def save():
 
@@ -58,10 +58,10 @@ def set_user_agent():
 
                 else:
 
-                    saveConfigJSON.save_config_json(file=globalVariables.user_agent_json_file,
-                                                    values=(user_agent_entry.get(),))
+                    save_config_json.save_config_json(file=global_variables.user_agent_json_file,
+                                                      values=(user_agent_entry.get(),))
 
-                    globalVariables.menubar_window = False
+                    global_variables.menubar_window = False
                     user_agent_config_window.destroy()
 
             except Exception as e:
@@ -78,10 +78,10 @@ def set_user_agent():
         button_save = Button(text="Save", width=10, height=1, command=save)
         button_save.pack(pady=5)
 
-        if globalVariables.user_agent == "":
-            user_agent_entry.insert(0, globalVariables.default_user_agent)
+        if global_variables.user_agent == "":
+            user_agent_entry.insert(0, global_variables.default_user_agent)
         else:
-            user_agent_entry.insert(0, globalVariables.user_agent)
+            user_agent_entry.insert(0, global_variables.user_agent)
 
         user_agent_config_window.wm_protocol("WM_DELETE_WINDOW",
                                              lambda: destroy_toolbar_windows(user_agent_config_window))
@@ -91,15 +91,15 @@ def set_user_agent():
 
 def load_user_agent(w):
     try:
-        if globalVariables.user_agent_json_file_location.exists():
-            with open(globalVariables.user_agent_json_file_location) as js:
+        if global_variables.user_agent_json_file_location.exists():
+            with open(global_variables.user_agent_json_file_location) as js:
                 data = json.load(js)
-                globalVariables.user_agent = data["user_agent"]
+                global_variables.user_agent = data["user_agent"]
 
-        if globalVariables.user_agent == "":
-            return globalVariables.default_user_agent
+        if global_variables.user_agent == "":
+            return global_variables.default_user_agent
         else:
-            return globalVariables.user_agent
+            return global_variables.user_agent
     except KeyError as e:
         error_dialog = QErrorMessage()
         error_dialog.showMessage("Key not found in UserAgent.json: " + str(e) + "\nMake sure the key is valid "
@@ -108,23 +108,19 @@ def load_user_agent(w):
                                                                                 "''C:/PyFlyff/UserAgent.json'' "
                                                                                 "to create a new one by setting "
                                                                                 "a new User Agent.")
-        error_dialog.setWindowIcon(QIcon(globalVariables.icon))
+        error_dialog.setWindowIcon(QIcon(global_variables.icon))
         w.append(error_dialog)
 
 
 def always_on_top(w):
-    if not globalVariables.is_on_top:
-        w.setWindowFlag(Qt.WindowStaysOnTopHint)
-        w.show()
+    if not global_variables.is_on_top:
+        # Turn on: Add the flag to existing ones
+        w.setWindowFlag(Qt.WindowType.WindowStaysOnTopHint, True)
         w.q_action_always_on_top.setText("Always on Top: On")
-        globalVariables.is_on_top = True
+        global_variables.is_on_top = True
     else:
-        w.setWindowFlags(
-            Qt.Window |
-            Qt.WindowTitleHint |
-            Qt.WindowCloseButtonHint |
-            Qt.WindowMinimizeButtonHint |
-            Qt.WindowMaximizeButtonHint)
-        w.show()
+        # Turn off: Remove only the flag from existing ones
+        w.setWindowFlag(Qt.WindowType.WindowStaysOnTopHint, False)
         w.q_action_always_on_top.setText("Always on Top: Off")
-        globalVariables.is_on_top = False
+        global_variables.is_on_top = False
+    w.show()  # Apply changes
