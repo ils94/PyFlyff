@@ -1,7 +1,8 @@
 ## PyFlyff (Deprecated)
 
 > **Project Retired:**  
-> PyFlyff had a great run with over **2,000 downloads**, but it’s now retired.  
+> PyFlyff had a great run with over **2,000 downloads**, but it’s now retired.
+> I will just update to fix some bugs and outdated WebEngine, but won't be adding new stuff.
 > Check out its modern successor: [**Mini PyFlyff**](https://github.com/ils94/Mini_PyFlyff).
 
 ## Overview
