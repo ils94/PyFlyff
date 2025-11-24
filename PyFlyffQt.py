@@ -9,17 +9,15 @@ from PyQt6.QtWidgets import (QApplication, QMainWindow, QMenuBar, QDialog, QLabe
 from PyQt6.QtWebEngineWidgets import QWebEngineView
 from PyQt6.QtWebEngineCore import QWebEngineProfile, QWebEnginePage
 from PyQt6.QtGui import QKeySequence, QIcon, QAction, QShortcut
-
 import random
-
 import global_variables
 import virtual_keys
 import profiles
 import windows_api
 import save_config_json
 import miscs
-
 import win32gui
+from pathlib import Path
 
 
 class MiniFtoolDialog(QDialog):
@@ -378,12 +376,12 @@ class ProfileDialog(QDialog):
                 self.parent().browser = QWebEngineView()
                 self.parent().setCentralWidget(self.parent().browser)
 
-                client_folder = "C:/PyFlyff/" + selected.replace(" ", "")
+                client_folder = Path(global_variables.data_folder) / selected.replace(" ", "")
 
                 main_profile = QWebEngineProfile(selected.replace(" ", ""),
                                                  self.parent().browser)
-                main_profile.setCachePath(client_folder)
-                main_profile.setPersistentStoragePath(client_folder)
+                main_profile.setCachePath(str(client_folder))
+                main_profile.setPersistentStoragePath(str(client_folder))
                 main_page = QWebEnginePage(main_profile, self.parent().browser)
 
                 self.parent().browser.setPage(main_page)
@@ -516,11 +514,11 @@ class MainWindow(QMainWindow):
         new_window.setAttribute(Qt.WidgetAttribute.WA_DeleteOnClose)
         new_window.destroyed.connect(lambda: self.windows.remove(new_window))
 
-        client_folder = "C:/PyFlyff/" + wn.replace(" ", "")
+        client_folder = Path(global_variables.data_folder) / wn.replace(" ", "")
 
         alt_profile = QWebEngineProfile(wn.replace(" ", ""), new_window)
-        alt_profile.setCachePath(client_folder)
-        alt_profile.setPersistentStoragePath(client_folder)
+        alt_profile.setCachePath(str(client_folder))
+        alt_profile.setPersistentStoragePath(str(client_folder))
         alt_page = QWebEnginePage(alt_profile, new_window)
 
         new_window.setPage(alt_page)
