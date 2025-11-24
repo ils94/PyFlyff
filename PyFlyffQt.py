@@ -352,6 +352,7 @@ class ProfileDialog(QDialog):
         layout.addWidget(label)
 
         self.profile_combobox = QComboBox()
+        self.profile_combobox.setEditable(True)
         self.profile_combobox.addItems(global_variables.profile_list or [])
         layout.addWidget(self.profile_combobox)
 

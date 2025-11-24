@@ -1,4 +1,4 @@
-import pathlib
+from pathlib import Path
 
 url = "https://universe.flyff.com/play"
 icon = "icons/PyFlyff.ico"
@@ -28,14 +28,17 @@ menubar_window = False
 can_reload_client = False
 is_on_top = False
 
-data_folder = "C:/PyFlyff"
-profile_file_location = "C:/PyFlyff/profiles.txt"
+# Diretório Documentos do usuário
+documents_folder = Path.home() / "Documents"
+
+data_folder = documents_folder / "PyFlyff"
+profile_file_location = data_folder / "profiles.txt"
 
 mini_ftool_json_file = "MiniFToolConfig.json"
-mini_ftool_json_file_location = pathlib.Path(mini_ftool_json_file)
+mini_ftool_json_file_location = Path(mini_ftool_json_file)
 
 alt_control_json_file = "AltControl.json"
-alt_control_json_file_location = pathlib.Path(alt_control_json_file)
+alt_control_json_file_location = Path(alt_control_json_file)
 
 user_agent_json_file = "UserAgent.json"
-user_agent_json_file_location = pathlib.Path(user_agent_json_file)
+user_agent_json_file_location = Path(user_agent_json_file)
