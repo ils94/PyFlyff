@@ -15,8 +15,8 @@ profile_list = []
 mini_ftool_global_vars = []
 
 mini_ftool_window_name = ""
-hwndMain = 0
-hwndAlt = 0
+hwndMain = ""
+hwndAlt = ""
 alt_window_name = ""
 user_agent = ""
 
