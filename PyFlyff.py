@@ -194,7 +194,7 @@ class AltControlDialog(QDialog):
         super().__init__(parent)
         self.setWindowTitle("Alt Control")
         self.setWindowIcon(QIcon(global_variables.icon))
-        self.setFixedSize(300, 280)
+        self.setFixedSize(300, 300)
         self.setWindowFlags(self.windowFlags() | Qt.WindowType.WindowStaysOnTopHint)
 
         screen = QApplication.primaryScreen().geometry()
