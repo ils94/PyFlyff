@@ -1,126 +1,134 @@
-from tkinter import Tk, messagebox, Label, Entry, Button, X
+import json
+import threading
+from pathlib import Path
 
-from PyQt6.QtWidgets import QErrorMessage
+from PyQt6.QtWidgets import (
+    QApplication, QWidget, QLabel, QLineEdit, QPushButton,
+    QVBoxLayout, QMessageBox, QErrorMessage
+)
 from PyQt6.QtGui import QIcon
 from PyQt6.QtCore import Qt
-import json
+
 import global_variables
 import save_config_json
-import threading
 
 
-def destroy_toolbar_windows(w):
+def destroy_toolbar_windows(window: QWidget):
     global_variables.menubar_window = False
-    w.destroy()
+    window.close()
 
 
 def multithreading(function):
-    threading.Thread(target=function).start()
+    threading.Thread(target=function, daemon=True).start()
 
 
-def fullscreen(w):
-    if w.isFullScreen():
-        w.showMaximized()
-        w.menu_bar.setVisible(True)
+def fullscreen(window: QWidget):
+    if window.isFullScreen():
+        window.showMaximized()
+        window.menu_bar.setVisible(True)
     else:
-        w.showFullScreen()
-        w.menu_bar.setVisible(False)
+        window.showFullScreen()
+        window.menu_bar.setVisible(False)
 
 
 def set_user_agent():
-    if not global_variables.menubar_window:
+    if global_variables.menubar_window:
+        return  # Evita abrir múltiplas vezes
 
-        global_variables.menubar_window = True
+    global_variables.menubar_window = True
 
-        user_agent_config_window = Tk()
+    window = QWidget()
+    window.setWindowTitle("User Agent")
+    window.setWindowIcon(QIcon(global_variables.icon))
+    window.setFixedSize(420, 190)
+    window.setWindowFlags(window.windowFlags() | Qt.WindowType.WindowStaysOnTopHint)
 
-        window_width = 300
-        window_height = 130
+    # Centraliza na tela
+    screen = QApplication.primaryScreen().availableGeometry()
+    window.move(
+        (screen.width() - window.width()) // 2,
+        (screen.height() - window.height()) // 2
+    )
 
-        screen_width = user_agent_config_window.winfo_screenwidth()
-        screen_height = user_agent_config_window.winfo_screenheight()
+    layout = QVBoxLayout(window)
 
-        x = (screen_width / 2) - (window_width / 2)
-        y = (screen_height / 2) - (window_height / 2)
+    lbl_title = QLabel("Set your User Agent below:")
+    lbl_title.setAlignment(Qt.AlignmentFlag.AlignCenter)
+    layout.addWidget(lbl_title)
 
-        user_agent_config_window.geometry("300x130+" + str(int(x)) + "+" + str(int(y)))
-        user_agent_config_window.minsize(300, 130)
-        user_agent_config_window.attributes("-topmost", True)
-        user_agent_config_window.title("User Agent")
-        user_agent_config_window.iconbitmap(global_variables.icon)
+    entry = QLineEdit()
+    entry.setText(global_variables.user_agent or global_variables.default_user_agent)
+    layout.addWidget(entry)
 
-        def save():
+    lbl_restart = QLabel("After setting your User Agent, restart the Client.")
+    lbl_restart.setAlignment(Qt.AlignmentFlag.AlignCenter)
+    lbl_restart.setWordWrap(True)
+    layout.addWidget(lbl_restart)
 
-            try:
-                if user_agent_entry.get() == "":
+    def save():
+        ua = entry.text().strip()
+        if not ua:
+            QMessageBox.critical(window, "Error", "Field cannot be empty.")
+            return
 
-                    messagebox.showerror("Error", "Field cannot be empty.")
+        try:
+            save_config_json.save_config_json(
+                file=global_variables.user_agent_json_file,
+                values=(ua,)
+            )
+            global_variables.user_agent = ua
+            destroy_toolbar_windows(window)
+        except Exception as e:
+            QMessageBox.critical(window, "Error", str(e))
 
-                else:
+    btn = QPushButton("Save")
+    btn.setFixedHeight(40)
+    btn.clicked.connect(save)
+    layout.addWidget(btn, alignment=Qt.AlignmentFlag.AlignCenter)
 
-                    save_config_json.save_config_json(file=global_variables.user_agent_json_file,
-                                                      values=(user_agent_entry.get(),))
+    # Fechar com X do Windows
+    def close_event(event):
+        destroy_toolbar_windows(window)
+        event.accept()
 
-                    global_variables.menubar_window = False
-                    user_agent_config_window.destroy()
+    window.closeEvent = close_event
 
-            except Exception as e:
-                messagebox.showerror("Error", str(e))
-
-        user_agent_label = Label(user_agent_config_window, text="Set your User Agent below:")
-        user_agent_entry = Entry(user_agent_config_window)
-        restart_label = Label(user_agent_config_window, text="After setting your User Agent, restart the Client.")
-
-        user_agent_label.pack(fill=X, pady=5, padx=5)
-        user_agent_entry.pack(fill=X, pady=5, padx=5)
-        restart_label.pack(fill=X, pady=5, padx=5)
-
-        button_save = Button(text="Save", width=10, height=1, command=save)
-        button_save.pack(pady=5)
-
-        if global_variables.user_agent == "":
-            user_agent_entry.insert(0, global_variables.default_user_agent)
-        else:
-            user_agent_entry.insert(0, global_variables.user_agent)
-
-        user_agent_config_window.wm_protocol("WM_DELETE_WINDOW",
-                                             lambda: destroy_toolbar_windows(user_agent_config_window))
-
-        user_agent_config_window.mainloop()
+    window.show()
 
 
-def load_user_agent(w):
+def load_user_agent(main_window):
     try:
-        if global_variables.user_agent_json_file_location.exists():
-            with open(global_variables.user_agent_json_file_location) as js:
-                data = json.load(js)
+        file_path = global_variables.user_agent_json_file_location
+        if Path(file_path).exists():
+            with open(file_path, "r", encoding="utf-8") as f:
+                data = json.load(f)
                 global_variables.user_agent = data["user_agent"]
 
-        if global_variables.user_agent == "":
+        if not global_variables.user_agent:
             return global_variables.default_user_agent
         else:
             return global_variables.user_agent
+
     except KeyError as e:
-        error_dialog = QErrorMessage()
-        error_dialog.showMessage("Key not found in UserAgent.json: " + str(e) + "\nMake sure the key is valid "
-                                                                                "inside the file, or delete "
-                                                                                "the file "
-                                                                                "''C:/PyFlyff/UserAgent.json'' "
-                                                                                "to create a new one by setting "
-                                                                                "a new User Agent.")
+        error_dialog = QErrorMessage(main_window)
+        error_dialog.setWindowTitle("User Agent Error")
         error_dialog.setWindowIcon(QIcon(global_variables.icon))
-        w.append(error_dialog)
+        error_dialog.showMessage(
+            f"Key not found in UserAgent.json: {e}\n\n"
+            "Make sure the key is valid inside the file, or delete the file\n"
+            f"'{global_variables.user_agent_json_file_location}'\n"
+            "to create a new one by setting a new User Agent."
+        )
+        error_dialog.exec()
 
 
-def always_on_top(w):
+def always_on_top(window):
     if not global_variables.is_on_top:
-        # Turn on: Add the flag to existing ones
-        w.setWindowFlag(Qt.WindowType.WindowStaysOnTopHint, True)
-        w.q_action_always_on_top.setText("Always on Top: On")
+        window.setWindowFlag(Qt.WindowType.WindowStaysOnTopHint, True)
+        window.q_action_always_on_top.setText("Always on Top: On")
         global_variables.is_on_top = True
     else:
-        # Turn off: Remove only the flag from existing ones
-        w.setWindowFlag(Qt.WindowType.WindowStaysOnTopHint, False)
-        w.q_action_always_on_top.setText("Always on Top: Off")
+        window.setWindowFlag(Qt.WindowType.WindowStaysOnTopHint, False)
+        window.q_action_always_on_top.setText("Always on Top: Off")
         global_variables.is_on_top = False
-    w.show()  # Apply changes
+    window.show()

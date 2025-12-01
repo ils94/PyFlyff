@@ -13,6 +13,7 @@ def save_alt_profiles(combobox):
         f.close()
 
         return global_variables.profile_list
+    return ""
 
 
 def load_alt_profiles():

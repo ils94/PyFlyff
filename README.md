@@ -110,8 +110,6 @@ Use responsibly — you’ve been warned.
 ## Known Issues
 
 -   If Google login is blocked, set a new **User Agent** and restart.
-    
--   If recaptcha fails due to an “outdated browser” warning, set **User Agent → any value** to bypass.
 
 ## Build Instructions
 
@@ -130,11 +128,6 @@ pyinstaller PyFlyff.py --icon=icons/PyFlyff.ico --onedir --noconsole
 xcopy icons dist\PyFlyff\icons\
 ```
 
-```bash
-pyinstaller PyFlyffQt.py --icon=icons/PyFlyff.ico --onedir --noconsole
-xcopy icons dist\PyFlyffQt\icons\
-```
-
 If Python is not in PATH, use full paths:
 
 PyFlyff.py
@@ -143,14 +136,6 @@ PyFlyff.py
 Path\to\python.exe Path\to\pyinstaller.py PyFlyff.py --icon=icons/PyFlyff.ico --onedir --noconsole
 
 xcopy icons dist\PyFlyff\icons\
-```
-
-PyFlyffQt.py
-
-```bash
-Path\to\python.exe Path\to\pyinstaller.py PyFlyffQt.py --icon=icons/PyFlyff.ico --onedir --noconsole
-
-xcopy icons dist\PyFlyffQt\icons\
 ```
 
 -   `pyinstaller.py` is located in `<Python Installation>\Scripts`.
