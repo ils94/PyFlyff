@@ -33,7 +33,7 @@ def fullscreen(window: QWidget):
 
 def set_user_agent():
     if global_variables.menubar_window:
-        return  # Evita abrir múltiplas vezes
+        return
 
     global_variables.menubar_window = True
 
@@ -43,7 +43,6 @@ def set_user_agent():
     window.setFixedSize(420, 190)
     window.setWindowFlags(window.windowFlags() | Qt.WindowType.WindowStaysOnTopHint)
 
-    # Centraliza na tela
     screen = QApplication.primaryScreen().availableGeometry()
     window.move(
         (screen.width() - window.width()) // 2,
@@ -86,7 +85,6 @@ def set_user_agent():
     btn.clicked.connect(save)
     layout.addWidget(btn, alignment=Qt.AlignmentFlag.AlignCenter)
 
-    # Fechar com X do Windows
     def close_event(event):
         destroy_toolbar_windows(window)
         event.accept()

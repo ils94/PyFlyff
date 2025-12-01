@@ -15,8 +15,8 @@ profile_list = []
 mini_ftool_global_vars = []
 
 mini_ftool_window_name = ""
-hwndMain = ""
-hwndAlt = ""
+hwndMain = 0
+hwndAlt = 0
 alt_window_name = ""
 user_agent = ""
 
@@ -28,17 +28,20 @@ menubar_window = False
 can_reload_client = False
 is_on_top = False
 
-# Diretório Documentos do usuário
 documents_folder = Path.home() / "Documents"
-
 data_folder = documents_folder / "PyFlyff"
+configs_folder = data_folder / "configs"
+
+data_folder.mkdir(parents=True, exist_ok=True)
+configs_folder.mkdir(parents=True, exist_ok=True)
+
+mini_ftool_json_file = configs_folder / "MiniFToolConfig.json"
+mini_ftool_json_file_location = mini_ftool_json_file
+
+alt_control_json_file = configs_folder / "AltControl.json"
+alt_control_json_file_location = alt_control_json_file
+
+user_agent_json_file = configs_folder / "UserAgent.json"
+user_agent_json_file_location = user_agent_json_file
+
 profile_file_location = data_folder / "profiles.txt"
-
-mini_ftool_json_file = "MiniFToolConfig.json"
-mini_ftool_json_file_location = Path(mini_ftool_json_file)
-
-alt_control_json_file = "AltControl.json"
-alt_control_json_file_location = Path(alt_control_json_file)
-
-user_agent_json_file = "UserAgent.json"
-user_agent_json_file_location = Path(user_agent_json_file)

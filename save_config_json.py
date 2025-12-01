@@ -31,15 +31,10 @@ def save_config_json(**kwargs):
         elif file == global_variables.user_agent_json_file:
             data = {"user_agent": values[0]}
 
-        # Salva o JSON com indentação para melhor legibilidade (opcional)
         with open(file, "w", encoding="utf-8") as f:
             json.dump(data, f, indent=4, ensure_ascii=False)
 
-        # Opcional: exibir mensagem de sucesso
-        # QMessageBox.information(None, "Sucesso", "Configuração salva com sucesso!")
-
     except Exception as e:
-        # Cria e exibe a caixa de erro
         msg = QMessageBox()
         msg.setIcon(QMessageBox.Icon.Critical)
         msg.setWindowTitle("Erro")
